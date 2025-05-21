@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_app1/cubits/cubit/task_cubit.dart';
+import 'package:to_do_app1/cubits/bloc/task_bloc.dart';
 
 void main() {
   
@@ -28,10 +28,10 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => TaskCubit(),
-        child: BlocBuilder<TaskCubit, TaskState>(
+        create: (context) => TaskBloc(),
+        child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
-            final  controllerCubit = context.read<TaskCubit>();
+            final  controllerCubit = context.read<TaskBloc>();
             return Column(
             
               children: [
@@ -54,7 +54,7 @@ class MyHomePage extends StatelessWidget {
                   
                   onPressed: (){
                     if(controller.text.isEmpty)return;
-                    controllerCubit.addTask(controller.text);
+                    controllerCubit.add(addTask(controller.text));
                     controller.clear();
 
                   }, 
@@ -68,11 +68,11 @@ class MyHomePage extends StatelessWidget {
                         leading: Checkbox(
                           value: state.tasksList[index].isCompleted,
                           onChanged: (value){
-                           controllerCubit.toggleTask(state.tasksList[index].id);
+                           controllerCubit.add(toggleTask(state.tasksList[index].id));
                           }),
                           trailing: IconButton(
                             onPressed: (){
-                           controllerCubit.removeTask(state.tasksList[index].id);
+                           controllerCubit.add(removeTask(state.tasksList[index].id));
                             },
                             icon: Icon(Icons.delete)),
                       );
